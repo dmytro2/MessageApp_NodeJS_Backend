@@ -1,0 +1,156 @@
+<!-- 
+sample link: http://47.91.236.188:3000/msgsend/sendmessage.html?user_id=59a16ef0a076d6149c471dbe&use_name=User 2
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Send Message</title>
+<link rel="stylesheet" href="jquery_mobile.css" />
+<script src="jquery.js"></script>
+<script src="jquery_mobile.js"></script>
+
+<style type="text/css">
+.page {
+	background-color: #FAFAFA !important;
+}
+.title_bar {
+	height: 115px;
+	background-color: #09CC98 !important;
+}
+.titleIcon_container {
+	margin-left: auto;
+	margin-right: auto;
+	width: 186px;
+	/*margin-top: 10px;*/
+}
+.accountIcon_container {
+	width: 150px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 60px;
+}
+.profile_picture {
+	border-radius: 75px;
+}
+.user_name {
+	width: 100%;
+	text-align: center;
+	font-size: 40px;
+	margin-top: 30px;
+}
+.message {
+	border: 4px solid #09CC98 !important;
+	border-radius: 50px;
+	width: 80% !important;
+	margin-left: 10% !important;
+	margin-top: 40px;
+	height: 500px !important;
+	/*padding: 50px !important;*/
+	font-size: 40px;
+}
+.btn_send {
+	margin-top: 25px;
+	width: 60% !important;
+	margin-left: 20% !important;
+	margin-top: 50px;
+	height: 150px;
+	background-color: #09CC98 !important;
+	color: white !important;
+	font-size: 50px;
+	margin-bottom: 30px;
+}
+.instruction{
+	color: #95989A;
+	float: left;
+	width: 100%;
+	text-align: center;
+	padding-left: 10px;
+	padding-right: 10px;
+	font-size: 40px;
+}
+.link_external {
+	color: #09CC98 !important;
+	text-decoration: none;
+	font-size: 50px;
+	margin-left: 8px;
+}
+</style>
+</head>
+<body>
+<div class="page">
+	<div data-role="header" class="title_bar">
+		<div class="titleIcon_container"><img src="dave.png" width="186" height="105"/></div>
+	</div>
+	<div class="accountIcon_container">
+		<img class="profile_picture" src="ic_account_circle_48pt_3x.png" width="150" height="150" />	
+	</div>
+	<div class="user_name">User Name</div>
+	<textarea cols="30" rows="8" class="message" placeholder="请给这个人发送一条真心的建议或者夸奖！"></textarea>
+	<button class="btn_send" onclick="sendMessage()">发 送</button>
+	<p class="instruction">
+		如果你想保存这个人的话，请打开APP
+		<a class='link_external deeplink' href="">打开</a>
+	</p>
+	<p class="instruction" style="line-height: 1.5; margin-top: -5px;">
+	没有下载xxxAPP的话，请点击此链接下载 <br/>
+	<a class='link_external' href="">AppStore Link</a>
+	</p>
+	<script>
+
+		var url_origin = 'http://47.91.236.188:3000';
+		// var url_origin = 'http://localhost:3000';
+		var strUrl=document.URL;
+
+
+
+		function getParameterByName( name,href )
+		{
+		  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+		  var regexS = "[\\?&]"+name+"=([^&#]*)";
+		  var regex = new RegExp( regexS );
+		  var results = regex.exec( href );
+		  if( results == null )
+		    return "";
+		  else
+		    return decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
+
+
+
+		var user_id = getParameterByName('user_id',strUrl);
+		var user_name = getParameterByName('user_name', strUrl);
+
+		var url_picture = url_origin+'/images/profile_pictures/'+user_id+'.jpg';
+
+
+		$('.profile_picture').attr("src", url_picture);
+		$('.user_name').text(user_name);
+		var str_deepLink = "amsgapp://"+user_id+"/"+user_name;
+		$('.deeplink').attr("href", str_deepLink);
+
+		function sendMessage(){
+			$.ajax({
+			  type: 'POST',
+			  url: 'http://47.91.236.188:3000/message/',
+			  // url: url.origin+'/message/',
+			  data: {
+			      "user_id_from": "0",
+			      "user_id_to": user_id,
+			      "message": $('.message').val()
+			    },
+			  success: function(res){
+			  	if(res.Status)
+			  		alert('鸽子已经成功把您的反馈传给它了。');
+			  	else
+			  		alert('Error! '+res.Message);
+
+			  },
+			  dataType: "json"
+			});
+		}
+
+	</script>
+</div>
+</body>
+</html>

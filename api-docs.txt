@@ -1,0 +1,225 @@
+- Install the command line tool
+$ npm install -g foreman
+- Run your application with
+$ nf start
+
+==============================================================================
+eg: [serverURL] = http://localhost:3000
+
+0. test api
+  - [serverURL]/handle
+  - Method: GET
+  - Success Response:
+    {
+      "message": "Hello AMsg Node!"
+    }
+
+1. create account
+  - [serverURL]/handle/register
+  - Method: POST
+  - Request Body:
+    {"user":{"email":"aa15@gmail.com","password":"123456", "name":"test1"}}
+  - Success Response:
+    {
+    "success": true,
+    "result": true,
+    "data": {
+        "__v": 0,
+        "id": "599b1ea0a9327",
+        "name": "test1",
+        "email": "test1@amsg.com",
+        "password": "1234",
+        "_id": "599b1ea069b7ee1d5c9152d7",
+        "timestamp": "2017-08-21T17:55:44.370Z",
+        "push_notification"
+    }
+  }
+
+2. send message
+  - [serverURL]/message/
+  - Method: POST
+  - Request Body:
+    {
+      "user_id_from": "0",
+      "user_id_to": "599b1ea069b7ee1d5c9152d7",
+      "message": "Test Message 2"
+    }
+  - Success Response:
+    {
+    "Status": true,
+    "Data": {
+        "__v": 0,
+        "user_id_from": "0",
+        "user_id_to": "599b1ea069b7ee1d5c9152d7",
+        "timestamp": "2017-08-21T19:38:22.431Z",
+        "_id": "599b36aecd05d1469064a240",
+        "isFavourite": false,
+        "text": "Test Message 3",
+        "user_name_to": "test1"
+    }
+}
+3. get user's message received
+  - [serverURL]/feed/{user_id_to}
+  - Method: GET
+  - Success Response:
+  {
+    "message": "success",
+    "items": [
+        {
+            "_id": "599b3760cd05d1469064a243",
+            "user_id_from": "599b1ea069b7ee1d5c9152d7",
+            "user_id_to": "599b36ffcd05d1469064a241",
+            "timestamp": "2017-08-21T19:41:20.534Z",
+            "__v": 0,
+            "isFavourite": false,
+            "text": "Test Message 4",
+            "user_name_to": "test2"
+        }
+    ]
+}
+
+4. get user's message sent
+  - [serverURL]/getMessageSent/{user_id_from}
+  - Method: GET
+  - Success Response:
+  {
+    "message": "success",
+    "items": [
+        {
+            "_id": "599b3760cd05d1469064a243",
+            "user_id_from": "599b1ea069b7ee1d5c9152d7",
+            "user_id_to": "599b36ffcd05d1469064a241",
+            "timestamp": "2017-08-21T19:41:20.534Z",
+            "__v": 0,
+            "isFavourite": false,
+            "text": "Test Message 4",
+            "user_name_to": "test2"
+        }
+    ]
+}
+
+5. login user
+  - [serverURL]/handle/login
+  - Method: POST
+  - Request Body:
+    {"user":{"email":"aa15@gmail.com","password":"123456"}}
+  - Success Response:
+  {
+      "success": true,
+      "result": true
+  }
+
+
+
+6. set message as favourite
+  - [serverURL]/setMessageFavourite/
+  - Method: POST
+  - Request Body:
+    {
+      "message_id": "0",
+      "isFavourite": "true", // true or false
+    }
+  - Success Response:
+    {
+      "message": "success",
+      "items": {
+          "n": 1,
+          "nModified": 1,
+          "ok": 1
+      }
+    }
+
+
+7. get user's favourite message
+  - [serverURL]/getMessageFavourite/{user_id_to}
+  - Method: GET
+  - Success Response:
+  {
+    "message": "success",
+    "items": [
+        {
+            "_id": "599b350ccd05d1469064a23f",
+            "user_id_from": "0",
+            "user_id_to": "599b1ea069b7ee1d5c9152d7",
+            "timestamp": "2017-08-21T19:31:24.765Z",
+            "__v": 0,
+            "isFavourite": true,
+            "text": "Test Message 2",
+            "user_name_to": "test1"
+        }
+    ]
+  }
+
+
+8. delete message 
+  - [serverURL]/deleteMessage/ {message_id}
+  - Method: GET
+  - Success Response:
+  {
+    "message": "success",
+    "items": {
+        "n": 1,
+        "ok": 1
+    }
+  }
+
+9. get unique link to send message
+  - [serverURL]/getUniqueLink/ {user_id}
+  - Method: GET
+  - Success Response:
+  {
+    "message": "success",
+    "link": "amsgapp://"+{user_id}
+  }
+
+10. update Push Notification Setting
+  - [serverURL]/setPushNotification/
+  - Method: POST
+  - Request Body:
+    {
+      "user_id": "0",
+      "push_notification": "false", // true or false
+    }
+  - Success Response:
+    {
+      "message": "success",
+      "items": {
+          "n": 1,
+          "nModified": 1,
+          "ok": 1
+      }
+    }
+
+11. update profile info
+
+  - [serverURL]/setPushNotification/
+  - Method: POST
+  - Request Body:
+    {
+      "user_id": "599ebb616de6fb696870c429",
+      "name": "User One",
+      "email": "user1@amsg.com",
+      "password": "test1234"
+    }
+  - Success Response:
+    {
+      "message": "success",
+      "items": {
+          "n": 1,
+          "nModified": 1,
+          "ok": 1
+      }
+    }
+
+
+12. upload profile picture
+ - [serverURL]/uploadProfilePicture
+ - Method: Post
+ - Content Type: multipart/form-data
+ - Request Body:
+    {
+      "user_id": "599ebb616de6fb696870c429",
+    }
+ - Picture File:
+    {"picture_file":[file]}
+
